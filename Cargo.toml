@@ -1,6 +1,14 @@
 [package]
+authors = ["Martin <m.e@acm.org>"]
+description = "Simpliied git2 access"
+documentation = "https://docs.rs/codex-git/0.1.1/narthex_engine_trait/"
 edition = "2018"
+keywords = ["portable", "cross-platform", "git2"]
+license = "MPL-2.0"
 name = "codex-git"
+publish = true
+readme = "README.md"
+repository = "https://github.com/martinellison/codex-git"
 version = "0.1.1"
 
 [dependencies]
