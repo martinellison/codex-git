@@ -9,12 +9,6 @@ use git2::{RemoteCallbacks, Repository};
 use log::trace;
 use std::str;
 
-// #[derive(StructOpt)]
-// struct Args {
-//     arg_remote: Option<String>,
-//     arg_branch: Option<String>,
-// }
-
 /// tracing macro
 macro_rules! git_pull_trace {
     () => { trace!() };
@@ -30,29 +24,6 @@ pub fn do_fetch<'a>(
     cb: RemoteCallbacks,
 ) -> Result<git2::AnnotatedCommit<'a>, git2::Error> {
     git_pull_trace!("fetching...");
-    //let mut cb = git2::RemoteCallbacks::new();
-
-    // // Print out our transfer progress.
-    // cb.transfer_progress(|stats| {
-    //     if stats.received_objects() == stats.total_objects() {
-    //         print!(
-    //             "Resolving deltas {}/{}\r",
-    //             stats.indexed_deltas(),
-    //             stats.total_deltas()
-    //         );
-    //     } else if stats.total_objects() > 0 {
-    //         print!(
-    //             "Received {}/{} objects ({}) in {} bytes\r",
-    //             stats.received_objects(),
-    //             stats.total_objects(),
-    //             stats.indexed_objects(),
-    //             stats.received_bytes()
-    //         );
-    //     }
-    //     io::stdout().flush().unwrap();
-    //     true
-    // });
-
     let mut fo = git2::FetchOptions::new();
     fo.remote_callbacks(cb);
     // Always fetch all tags.
@@ -205,23 +176,11 @@ pub fn do_merge<'a>(
     Ok(())
 }
 
-// fn run(args: &Args) -> Result<(), git2::Error> {
-//     let remote_name = args.arg_remote.as_ref().map(|s| &s[..]).unwrap_or("origin");
-//     let remote_branch = args.arg_branch.as_ref().map(|s| &s[..]).unwrap_or("master");
-//     let repo = Repository::open(".")?;
-//     let mut remote = repo.find_remote(remote_name)?;
-//     let fetch_commit = do_fetch(&repo, &[remote_branch], &mut remote)?;
-//     do_merge(&repo, &remote_branch, fetch_commit)
-// }
-
-// fn main() {
-//     let args = Args::from_args();
-//     match run(&args) {
-//         Ok(()) => {}
-//         Err(e) => git_pull_trace!("error: {}", e),
-//     }
-// }
 
 /*
- * To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to the original software to the public domain worldwide. This software is distributed without any warranty. See <http://creativecommons.org/publicdomain/zero/1.0/>.
+ * For git2 code: To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to the original software to the public domain worldwide. This software is distributed without any warranty. See <http://creativecommons.org/publicdomain/zero/1.0/>.
  */
+/* For the rest of the code (if applicable). This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+

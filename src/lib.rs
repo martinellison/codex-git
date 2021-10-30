@@ -183,11 +183,6 @@ impl CodexRepoConfig {
                         error!("error found in credential from memory {:?}", e);
                     }
                     Ok(_cr) => {
-                        // git_trace!(
-                        //     "found private: {}... public {}...",
-                        //     self.ssh_keys.private.get(..10).unwrap_or_default(),
-                        //     self.ssh_keys.public.get(..10).unwrap_or_default()
-                        // );
                     }
                 }
                 return cred_res;
@@ -219,7 +214,6 @@ impl CodexRepoConfig {
                         stats.received_bytes()
                     );
                 }
-                // io::stdout().flush().unwrap();
                 true
             });
             cb.sideband_progress(|msg| {
@@ -256,8 +250,6 @@ impl FetchStatus {
             false
         }
     }
-    // /** `has_changes` is whether there are any changes in the index */
-    // pub fn has_changes(&self)->Result<bool> {unimplemented!()}
 }
 impl fmt::Display for FetchStatus {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -380,43 +372,6 @@ impl CodexRepository {
             added: vec![],
         }
     }
-    /** `fetch` tries to update the local repository from the remote. */
-    // pub fn fetch(&mut self) -> Result<FetchStatus> {
-    //     git_trace!("fetching");
-    //     let mut fetch_options = self.config.fetch_options()?;
-    //     let mut remote = self.repo.find_remote("origin")?;
-    //     git_trace!("actual fetch");
-    //     remote.fetch(&["main"], Some(&mut fetch_options), None)?;
-    //     git_trace!("fetched");
-    //     let our_commit = self.our_commit()?;
-    //     let their_commit = self.their_commit()?;
-    //     if our_commit.id() == their_commit.id() {
-    //         git_trace!(
-    //             "same commit {} ({})",
-    //             &our_commit.id().to_string()[..6],
-    //             our_commit.summary().unwrap_or_default()
-    //         );
-    //         Ok(FetchStatus {
-    //             is_changed: false,
-    //             index: None,
-    //         })
-    //     } else {
-    //         git_trace!(
-    //             "our commit {} ({}) / their commit {} ({})",
-    //             &our_commit.id().to_string()[..6],
-    //             our_commit.summary().unwrap_or_default(),
-    //             &their_commit.id().to_string()[..6],
-    //             their_commit.summary().unwrap_or_default()
-    //         );
-    //         let index =
-    //             self.repo
-    //                 .merge_commits(&our_commit, &their_commit, Some(&MergeOptions::new()))?;
-    //         Ok(FetchStatus {
-    //             is_changed: true,
-    //             index: Some(index),
-    //         })
-    //     }
-    // }
     /// fetches data from the remote and merges if necessary
     pub fn fetch(&mut self) -> Result<()> {
         let remote_name = "origin";
@@ -432,27 +387,6 @@ impl CodexRepository {
         pull::do_merge(&self.repo, &remote_branch, fetch_commit)?;
         Ok(())
     }
-    // /** `commit_merge` commits any changes from a merge to the local repository. */
-    // pub fn commit_merge(&mut self, fs: &mut FetchStatus) -> NullResult {
-    //     if !fs.is_changed() {
-    //         return Ok(());
-    //     }
-    //     git_trace!("committing merged");
-    //     if let Some(i) = &mut fs.index {
-    //         let new_tree = self.repo.find_tree(i.write_tree_to(&self.repo)?)?;
-    //         let our_commit = self.our_commit()?;
-    //         let their_commit = self.their_commit()?;
-    //         let _oid =
-    //             self.write_commit(new_tree, "merge commit", &[&our_commit, &their_commit])?;
-    //         let obj = self.repo.revparse_single(&("refs/heads/main".to_owned()))?;
-    //         self.repo.checkout_tree(&obj, None)?;
-    //         self.repo.set_head(&("refs/heads/main".to_owned()))?;
-    //     }
-    //     self.needs_commit = false;
-    //     self.needs_push = true;
-    //     git_trace!("committed");
-    //     Ok(())
-    // }
     /** `commit_and_push` commits changes and pushes them */
     pub fn commit_and_push(&mut self) -> Result<()> {
         self.commit().context(format!(
@@ -551,11 +485,6 @@ impl CodexRepository {
             head.into_commit().map_err(|_e| anyhow!("not a commit"))?,
         ))
     }
-    // /** latest commit on other branch after fetch */
-    // fn their_commit(&self) -> Result<Commit<'_>> {
-    //     let their_reference = self.repo.find_reference("FETCH_HEAD")?;
-    //     Ok(their_reference.peel_to_commit()?)
-    // }
     /** `add` adds a file to the index */
     pub fn add(&mut self, path: PathBuf) -> NullResult {
         git_trace!("adding {:?}", &path);
@@ -570,14 +499,6 @@ impl CodexRepository {
             git_trace!("no commits, do not need push");
             return Ok(());
         }
-        // let index = self.repo.index()?;
-        // for i in 0..index.len() {
-        //     git_trace!(
-        //         "push index has {:?}",
-        //         std::str::from_utf8(&index.get(i).unwrap().path)
-        //             .map_err(|e| CodexGitError::Utf8Error(e))
-        //     );
-        // }
         git_trace!("pushing to remote");
         let mut remote = self.repo.find_remote("origin")?;
         let cb = self.config.callbacks()?;
@@ -596,3 +517,6 @@ impl CodexRepository {
         Ok(())
     }
 }
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */

@@ -50,9 +50,6 @@ fn basic() -> NullResult {
         let mut codex_repo = config.open().context("basic#a")?;
         let status = codex_repo.fetch().context("basic#b")?;
         git_test_trace!("b: merge status is {:?}", &status);
-        //  assert!(!status.is_changed());
-        // assert!(!status.has_conflict());
-        //  codex_repo.commit_merge(&mut status)?;
         check_file(&test_file_name, &test_data).context("basic#c")?;
     }
     {
@@ -68,7 +65,6 @@ fn basic() -> NullResult {
 #[test]
 /// test with several repositories
 fn multirepo() -> NullResult {
-    // let _ = env_logger::builder().is_test(true).try_init();
     let _ = simple_logger::init();
     git_test_trace!("mr: starting multirepo test");
     let mut config = test_config()?;
@@ -95,10 +91,6 @@ fn multirepo() -> NullResult {
         }
         check_file(&test_file_name1, &test_data_old)?;
         codex_repo.add(PathBuf::from(file_name))?;
-        // git_test_trace!("mr: commiting modified data");
-        // codex_repo.commit()?;
-        // git_test_trace!("mr: pushing");
-        // codex_repo.push(false)?;
     }
 
     {
@@ -120,10 +112,6 @@ fn multirepo() -> NullResult {
         }
         check_file(&test_file_name2, &test_data_new)?;
         codex_repo2.add(PathBuf::from(file_name))?;
-        // git_test_trace!("mr: commiting modified data");
-        // codex_repo2.commit()?;
-        // git_test_trace!("mr: pushing");
-        // codex_repo2.push(false)?;
     }
 
     {
@@ -135,9 +123,6 @@ fn multirepo() -> NullResult {
         let mut codex_repo = config.open()?;
         let status = codex_repo.fetch()?;
         git_test_trace!("mr: merge status is {:?}", &status);
-        //   assert!(status.is_changed());
-        //   assert!(!status.has_conflict());
-        // codex_repo.commit_merge(&mut status)?;
         check_file(&test_file_name1, &test_data_new)?;
     }
     git_test_trace!("multirepo test complete");
@@ -156,8 +141,6 @@ fn test_config() -> Result<CodexRepoConfig> {
     create_dir_all(&path)?;
     assert!(path.is_dir());
     let current_directory = current_dir()?;
-    //   let remote_url = format!("file://{}/test-repo", current_directory.
-    // to_string_lossy());
     let temp_dir_str: String = temp_dir().to_string_lossy().to_string();
     let remote_url = format!("file://{}/codex-test/remote", &temp_dir_str);
     git_test_trace!(
@@ -168,7 +151,6 @@ fn test_config() -> Result<CodexRepoConfig> {
     let config = CodexRepoConfig {
         user: User::new("tester", "tester@example.com"),
         remote_url: remote_url,
-        //  actually_write_to_remote: true,
         path: path.to_path_buf(),
         ssh_keys: SshKeys {
             private: "".to_string(),
@@ -179,3 +161,7 @@ fn test_config() -> Result<CodexRepoConfig> {
     };
     Ok(config)
 }
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
